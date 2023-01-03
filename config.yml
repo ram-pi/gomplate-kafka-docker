@@ -1,0 +1,34 @@
+suppressEmpty: false
+confluent:
+  version: 7.3.0
+
+kafka:
+  - port: 9091
+    name: kafka1
+  - port: 9092
+    name: kafka2
+  - port: 9093
+    name: kafka3
+
+zookeeper:
+  - port: 2181
+    name: zookeeper1
+  - port: 2181
+    name: zookeeper2
+  - port: 2181
+    name: zookeeper3
+
+sr:
+  enable: true
+  port: 8081
+  name: schema-registry
+
+connect:
+  enable: true
+  port: 8083
+  name: connect
+
+ksqldb: 
+  enable: true
+  port: 8088
+  name: ksqldb
