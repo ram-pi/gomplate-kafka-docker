@@ -3,20 +3,18 @@ confluent:
   version: 7.3.0
 
 kafka:
-  - port: 9091
-    name: kafka1
   - port: 9092
-    name: kafka2
-  - port: 9093
-    name: kafka3
+    name: kafka
+  # - port: 9091
+  #   name: kafka1
+  # - port: 9092
+  #   name: kafka2
+  # - port: 9093
+  #   name: kafka3
 
 zookeeper:
   - port: 2181
-    name: zookeeper1
-  - port: 2181
-    name: zookeeper2
-  - port: 2181
-    name: zookeeper3
+    name: zookeeper
 
 sr:
   enable: true
@@ -24,11 +22,19 @@ sr:
   name: schema-registry
 
 connect:
-  enable: true
+  enable: false
   port: 8083
   name: connect
 
 ksqldb: 
-  enable: true
+  enable: false
   port: 8088
   name: ksqldb
+
+prometheus:
+  enable: true
+  port: 9090
+
+kafdrop: 
+  enable: true
+  port: 9000

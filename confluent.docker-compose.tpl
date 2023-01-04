@@ -160,3 +160,37 @@ services:
       KSQL_KSQL_LOGGING_PROCESSING_TOPIC_AUTO_CREATE: 'true'
       KSQL_KSQL_LOGGING_PROCESSING_STREAM_AUTO_CREATE: 'true'
 {{ end }}
+
+{{ if (datasource "config").prometheus.enable }}
+  prometheus:
+    image: prom/prometheus
+    container_name: prometheus
+    depends_on:
+    {{ range $i2, $e2 := (datasource "config").kafka -}}
+        - {{ $e2.name}}
+    {{ end -}}
+    volumes:
+      - $PWD/volumes/prometheus.yml:/etc/prometheus/prometheus.yml
+    ports:
+      - {{ (datasource "config").prometheus.port }}:{{ (datasource "config").prometheus.port }}
+{{ end }}
+
+{{ if (datasource "config").kafdrop.enable }}
+  kafdrop:
+    hostname: kafdrop
+    container_name: kafdrop
+    image: obsidiandynamics/kafdrop
+    restart: "always"
+    ports:
+      - {{ (datasource "config").kafdrop.port }}:{{ (datasource "config").kafdrop.port }}
+    environment:
+      KAFKA_BROKERCONNECT: {{ join $bs "," }}
+      {{- if (datasource "config").sr.enable }}
+      CMD_ARGS: "--schemaregistry.connect=http://{{ (datasource "config").sr.name }}:{{ (datasource "config").sr.port }}"
+      {{ end -}}
+      JVM_OPTS: "-Xms16M -Xmx48M -Xss180K -XX:-TieredCompilation -XX:+UseStringDeduplication -noverify"
+    depends_on:
+      {{ range $i2, $e2 := (datasource "config").kafka -}}
+        - {{ $e2.name}}
+    {{ end -}}
+{{ end }}

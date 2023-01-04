@@ -1,3 +1,4 @@
+{{ if (datasource "config").prometheus.enable -}}
 global:
   scrape_interval:     15s # By default, scrape targets every 15 seconds.
 
@@ -17,8 +18,9 @@ scrape_configs:
 
     static_configs:
       - targets:
-        - kafka:8091
-      
+      {{- range $i2, $e2 := (datasource "config").kafka }}
+        - {{ $e2.name }}:8091
+      {{ end }}
 
   - job_name: 'zookeeper'
 
@@ -27,5 +29,7 @@ scrape_configs:
 
     static_configs:
       - targets:
-        - zookeeper:8091
-      
+      {{- range $i2, $e2 := (datasource "config").zookeeper }}
+        - {{ $e2.name }}:8091
+      {{ end }}
+{{ end }}
